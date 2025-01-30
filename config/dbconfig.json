@@ -1,0 +1,11 @@
+{
+  "development": {
+    "host": "localhost",
+    "username": "meme",
+    "port": "3306",
+    "password": "5ZXUBRZ6BX2FHL5RE89X",
+    "database": "solint",
+    "dialect": "mysql" ,
+		"connectionLimit" : 10000
+  }
+}

@@ -22,6 +22,9 @@ const {
 } = require( './config.js' )
 const bs58 = require ( 'bs58' )
 const conv_keypair_to_readable=key=>{ return { publickey: key?.publicKey.toString() , secretkey : bs58. key?.secretkey }}
+const conv_keypair_to_address =key=>{ return { publickey: key?.publicKey.toString() ,  }}
+const conv_keypair_to_secretkey=key=>{ return { secretkey : bs58. key?.secretkey }}
+
 async function createToken( { tokenInfo , myKeyPair } ) {
 	let { 
 		name,

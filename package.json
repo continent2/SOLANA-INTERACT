@@ -21,6 +21,7 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "pumpdotfun-sdk": "^1.3.2",
-    "random-word-slugs": "^0.1.7"
+    "random-word-slugs": "^0.1.7",
+    "url": "^0.11.4"
   }
 }
