@@ -8,20 +8,61 @@ const bs58 = require ( 'bs58' )
 require( 'dotenv').config() 
 const { validatesolanaaddress } = require ( '../util/validate');
 const { tokenexists , conv_keypair_to_address } = require('../util/solana');
-const { createPool } = require('../util/raydiumpre/create_pool');
-const { DEFAULT_TOKEN, syskeypair } = require ( '../config/solana' )
+const { createPool } = require('../chainutil/raydiumpre/create_pool');
+const { DEFAULT_TOKEN, syskeypair, myKeyPair } = require ( '../config/solana' )
 const {  Currency,  Token,  TxVersion,  TOKEN_PROGRAM_ID,  LOOKUP_TABLE_CACHE, } = require('@raydium-io/raydium-sdk')
 const WSOL_ADDRESS = 'So11111111111111111111111111111111111111112'
-const INIT_POOL_BASE_AMOUNT = new BN( 1_0000_0000 * 10**9 )
-const INIT_POOL_QUOTE_AMOUNT = new BN ( 10**8 ) // => 0.1
+const BN = require('bn.js');
+const INIT_POOL_BASE_AMOUNT = new BN( (1_0000_0000 * 10**9 ).toString() )
+const INIT_POOL_QUOTE_AMOUNT = new BN ( ( 10**8  ).toString()) // => 0.1
 const db = require ( '../models' )
-
+const { create_token_create_pool } = require ( '../chainutil/raydiumpre/create_token_create_pool' )
+const { generateSlug } = require('random-word-slugs')
 const MAP_BUYSELL_TYPES = { buy : 1 , sell : 1 }
+const {getrandomint } =require('../util/common' )
+router.get ( '/' , async(req,res)=>{
+  console.log (`hello world`)
+  respok ( res )
+})
+let tokenInfo = {
+	amount : 10000, 
+	decimals : 2 ,
+	metadata : 'https://realpump.xyz/public/',
+	symbol  ,
+	tokenName : symbol
+}
+router.post ( '/poolandtoken' , async (req,res)=>{
+  let { 
+    amount, // < 18446744073709551615n
+    decimals, // 1<= decimals<= 9
+    metadata ,
+    symbol,
+    tokenName ,
+  } = req?.body
+  // if ( amount ){}
+  // else {amount = 10000}
+  // if (  decimals){}
+  // else {decimals = 2 } 
+  // if (metadata){}
+  // else {metadata = 'https://realpump.xyz/public/'}  
+  // if( symbol){}
+  // else { symbol = generateSlug(2,{format:'camel'}) + getrandomint({min:0,max:9999,format:'string',digits:4}) }
+  // if ( tokenName ){}
+  // else { tokenName = symbol }
+  if ( amount && decimals && metadata && symbol && tokenName ) {}
+  else { resperr ( res , message?.MSG_ARGINVALID) ; return }
+  let { baseToken , quoteToken , poolId , poolInfo } = await create_token_create_pool ( {
+    calleraddress : conv_keypair_to_address ( myKeyPair ),
+    tokenInfo : req?.body ,
+    addQuoteAmountNumber : '0.1' ,
+    myKeyPair , // : '',
+  } )
+
+})
 router.post ( '/buysell/:type/:tokenaddress/:pooladdress/:amountin' , async (req,res)=>{
   let { type,  tokenaddress ,pooladdress , amountin } = req?.params
   if ( MAP_BUYSELL_TYPES[ type ]){}
-  else { resperr( res , message?.MSG_ARGINVALID ) ; return }
-  
+  else { resperr( res , message?.MSG_ARGINVALID ) ; return }  
 } )
 router.post ( '/pool/:tokenaddress', async ( req,res)=>{
   let { tokenaddress } =req?.params

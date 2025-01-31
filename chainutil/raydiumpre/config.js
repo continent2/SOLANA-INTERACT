@@ -17,7 +17,7 @@ const {
 require('dotenv').config () // ({ path: `.env.${process.env.NETWORK}` })
 const connection = new Connection(process.env.RPC_URL); // helius
 
-const myKeyPair = Keypair.fromSecretKey(new Uint8Array(bs58.decode(process.env.PRIVATE_KEY)));
+const myKeyPair = Keypair.fromSecretKey(new Uint8Array(bs58.default.decode(process.env.PRIVATE_KEY)));
 
 const makeTxVersion = TxVersion.V0;
 

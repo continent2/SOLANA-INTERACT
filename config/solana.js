@@ -9,7 +9,7 @@ let {	Connection,	Keypair,	PublicKey,	clusterApiUrl} = require('@solana/web3.js'
 // } = require('@raydium-io/raydium-sdk')
 require('dotenv').config () // ({ path: `.env.${process.env.NETWORK}` })
 const connection = new Connection(process.env.RPC_URL) // helius
-const myKeyPair = Keypair.fromSecretKey(new Uint8Array(bs58.decode(process.env.PRIVATE_KEY)));
+const myKeyPair = Keypair.fromSecretKey(new Uint8Array(bs58.default.decode(process.env.PRIVATE_KEY)));
 const syskeypair = myKeyPair
 
 const {

@@ -11,10 +11,10 @@ var http = require('http');
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.PORT || '3000');
+const PORT = '46261'
+var port = normalizePort(process.env.PORT || PORT );
 app.set('port', port);
-
+console.log ( `listening ${ PORT }`)
 /**
  * Create HTTP server.
  */
@@ -88,3 +88,7 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+console.log( `SOLINT LISTEN ${ PORT }`)
+setInterval (()=>{
+  console.log( `SOLINT LISTEN ${ PORT }`)
+} , 60 *1000 )

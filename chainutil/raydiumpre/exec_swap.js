@@ -21,13 +21,14 @@ const {
 	formatAmmKeysById,
 	sleepTime
 } = require('./util.js')
+const bs58 = require ( 'bs58' )
 async function execSwap(input) {
 //    let { poolInfo } = input 
 	console.log("swap pool info", input.poolInfo)
 	console.log("swap market info", input.marketInfo)
 
 	console.log("swap started for", input.wallet);
-	const myKeyPair = Keypair.fromSecretKey(new Uint8Array(bs58.decode(input.wallet)));
+	const myKeyPair = Keypair.fromSecretKey(new Uint8Array(bs58.default.decode(input.wallet)));
 	const myPublicKey = myKeyPair.publicKey
 
 	// -------- pre-action: get pool info --------

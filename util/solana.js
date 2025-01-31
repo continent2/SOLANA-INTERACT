@@ -2,7 +2,7 @@
 const bs58 = require ( 'bs58' )
 const { getOrCreateAssociatedTokenAccount } = require ( '@solana/spl-token' )
 let {	Connection,	Keypair,	PublicKey,	clusterApiUrl} = require('@solana/web3.js')
-const bs58 = require('bs58')
+// const bs58 = require('bs58')
 const {
 	Currency,
 	Token,

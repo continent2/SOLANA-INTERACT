@@ -22,7 +22,6 @@ const main = async ({
 		poolTokenMint,	// <= generateTokenMint(provider, swapAuthority);
 		feeTokenAccount,	// <= generateTokenAccount(provider, poolTokenMint, feeAuthority.publicKey)
 		destinationTokenAccount,	//
-
 //		rTokenMintAuthority,
 	//	cTokenMintAuthority,
 		//rTokenMint,
@@ -32,7 +31,7 @@ const main = async ({
 //		destinationAuthority,
 		rToken,
 		cToken,
-	} = await generateTestLinearSwapAccounts({ 
+	} = await generateTestLinearSwapAccounts( { 
 		programId: program.programId, 
 		cTokenInitialSupply : 500 * 10 ** 8  ,
 		feeAuthority ,
