@@ -36,6 +36,14 @@ module.exports = function(sequelize, DataTypes) {
     urllogo: {
       type: DataTypes.STRING(200),
       allowNull: true
+    },
+    programid: {
+      type: DataTypes.STRING(80),
+      allowNull: true
+    },
+    pooladdress: {
+      type: DataTypes.STRING(80),
+      allowNull: true
     }
   }, {
     sequelize,

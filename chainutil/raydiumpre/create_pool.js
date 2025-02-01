@@ -34,16 +34,17 @@ async function createPool(params) {
         myKeyPair , //        walletTokenAccounts,
 //        targetMarketId,
     } = params
-	const RAYDIUM_PROGRAM_ID = process.env.NETWORK == 'mainnet' ? MAINNET_PROGRAM_ID : DEVNET_PROGRAM_ID
+	// const RAYDIUM_PROGRAM_ID = process.env.NETWORK == 'mainnet' ? MAINNET_PROGRAM_ID : DEVNET_PROGRAM_ID
+	const RAYDIUM_PROGRAM_ID =  DEVNET_PROGRAM_ID
 	const myPublicKey = myKeyPair.publicKey
     const walletTokenAccounts = await getWalletTokenAccount(connection, myPublicKey)
 	const initPoolInstructionResponse = await Liquidity.makeCreatePoolV4InstructionV2Simple({
 		connection: connection,
 		programId: RAYDIUM_PROGRAM_ID.AmmV4,		// programId: CONFIG_PROGRAM_ID.AMM_OWNER,
-		// marketInfo: {
-		// 	marketId: params.targetMarketId,
-		// 	programId: RAYDIUM_PROGRAM_ID.OPENBOOK_MARKET
-		// },
+		marketInfo: {
+			marketId: params.targetMarketId,
+			programId: RAYDIUM_PROGRAM_ID.OPENBOOK_MARKET
+		},
 		baseMintInfo: params.baseToken,
 		quoteMintInfo: params.quoteToken,
 		baseAmount: params.addBaseAmount,

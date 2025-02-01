@@ -55,7 +55,7 @@ console.log ( { bondingCurveAccount } )
 //    console.log(globalAccount);
 // const currentSolBalance = await connection.getBalance(testAccount.publicKey);
 // if (currentSolBalance === 0) {
-//   console.log("Please send some SOL to the test-account:", testAccount.publicKey.toBase58());
+//   console.log("Please send some SOL to the test-account:", testAccount.publ icKey.toBase58());
 //   return;
 // }
 //    console.log(await sdk.getGlobalAccount());

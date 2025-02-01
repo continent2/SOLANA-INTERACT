@@ -17,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
+    pooladdress: {
+      type: DataTypes.STRING(80),
+      allowNull: true
+    },
     base: {
       type: DataTypes.STRING(80),
       allowNull: true
@@ -34,6 +38,22 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     authority: {
+      type: DataTypes.STRING(80),
+      allowNull: true
+    },
+    poolinfo: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    programid: {
+      type: DataTypes.STRING(80),
+      allowNull: true
+    },
+    marketid: {
+      type: DataTypes.STRING(80),
+      allowNull: true
+    },
+    tokenaddress: {
       type: DataTypes.STRING(80),
       allowNull: true
     }

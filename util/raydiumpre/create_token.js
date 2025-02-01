@@ -19,7 +19,7 @@ const { createCreateMetadataAccountV3Instruction, PROGRAM_ID } = require('@metap
 const {
 	connection,
 	myKeyPair
-} = require( './config.js' )
+} = require( './config' )
 const bs58 = require ( 'bs58' )
 const conv_keypair_to_readable=key=>{ let address = key?.publicKey.toString()
     return { publickey: key?.publicKey.toString() , secretkey : bs58. key?.secretkey 

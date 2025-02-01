@@ -1,5 +1,5 @@
-let fs = require('fs');
-let readline = require('readline');
+// let fs = require('fs');
+// let readline = require('readline');
 let { PublicKey, LAMPORTS_PER_SOL } = require('@solana/web3.js') // 1 000 000 000
 let {
     Token,
@@ -7,7 +7,7 @@ let {
     TokenAmount,
     TOKEN_PROGRAM_ID
 } = require( '@raydium-io/raydium-sdk' )
-let { createToken } = require('./create_token')
+let { createToken } = require('./create_token') // let { createToken } = require('../chainutil/raydiumpre/create_token')
 let { createMarket } = require('./create_market')
 let { createPool } = require('./create_pool')
 // let { execSwap } = require('./src/exec_swap.js')
@@ -15,7 +15,7 @@ let {
     connection,
 //    myKeyPair,
     DEFAULT_TOKEN,
-} = require('./config')
+} = require( './config' )
 let {
     getWalletTokenAccount,
     sleepTime
@@ -32,7 +32,7 @@ let minimumSOLBalance = 4;
 //     decimals : 6 ,
 //     metadata ,
 //     symbol : 'TST00',
-//     tokenName : 'TST00'
+//     token Name : 'TST00'
 // })
 async function create_token_create_pool ({
     calleraddress ,
@@ -44,42 +44,26 @@ async function create_token_create_pool ({
         decimals, // 1<= decimals<= 9
         metadata ,
         symbol,
-        tokenName 
+        name
+//        token Name 
     } = tokenInfo     // get account SOL balance
-    let address = calleraddress // new PublicKey(process.env.PUBLIC_KEY );
+    let address = new PublicKey( calleraddress )  // new PublicKey(process.env.PUBLIC_KEY );
     let balance = await connection.getBalance(address);
     let balanceInSol = balance / LAMPORTS_PER_SOL;
     console.log( `Deployer account Balance: ${balanceInSol} SOL\n` );
-    if (balanceInSol < minimumSOLBalance) {
-        console.log("Insufficient SOL balance in the account. Please ensure a minimum of", minimumSOLBalance, "SOL is secured to prevent transaction failures.");
-        return null // process.exit( 1 );
+    if (balanceInSol < minimumSOLBalance) {        console.log("Insufficient SOL balance in the account. Please ensure a minimum of", minimumSOLBalance, "SOL is secured to prevent transaction failures.");        return null // process.exit( 1 );
     }
-    console.log( "...Token Info Input..." )
-//    let amount = Number(prompt('amount(default: 10000): ')) || 10000;
-  //  let decimals = Number(prompt('decimals(default: 9): ')) || 9;
-    while ( decimals > 9 || decimals < 1 ) {
-        console.log( "Invalid decimal value, should be a value between 1 and 9" )
-        return null // decimals = Number(prompt('decimals(default: 9): ')) || 9;
+    console.log( "...Token Info Input..." ) //    let amount = Number(prompt('amount(default: 10000): ')) || 10000;  //  let decimals = Number(prompt('decimals(default: 9): ')) || 9;
+    while ( decimals > 9 || decimals < 1 ) {        console.log( "Invalid decimal value, should be a value between 1 and 9" );        return null // decimals = Number(prompt('decimals(default: 9): ')) || 9;
     }
-    if ( amount * 10 ** decimals > 18446744073709551615n) {
-        console.log("invalid supply and decimal value, total supply should be less than 18,446,744,073,709,551,615, including decimals")
-        return null 
+    if ( amount * 10 ** decimals > 18446744073709551615n) {        console.log("invalid supply and decimal value, total supply should be less than 18,446,744,073,709,551,615, including decimals");        return null 
     }
     console.log("\n...Market Info Input...")
-    let lotTickMap = {
-        0.001: 0.001,
-        0.01: 0.0001,
-        0.1: 0.00001,
-        1: 0.000001,
-        10: 0.0000001,
-        100: 0.00000001,
-        1000: 0.000000001,
-        10000: 0.0000000001
-    }
-    // let lotSize = Number(prompt('Lot Size(Choose higher for larger token supply, default: 1): ')) || 1;
+    let lotTickMap = {        0.001: 0.001,        0.01: 0.0001,        0.1: 0.00001,        1: 0.000001,
+        10: 0.0000001,        100: 0.00000001,        1000: 0.000000001,        10000: 0.0000000001
+    }    // let lotSize = Number(prompt('Lot Size(Choose higher for larger token supply, default: 1): ')) || 1;
     let lotSize = 1
-    if (!Object.keys(lotTickMap).includes(lotSize.toString())) {
-        // If not valid, prompt again
+    if (!Object.keys(lotTickMap).includes(lotSize.toString())) {        // If not valid, prompt again
         console.log("Invalid lot size, should be one of following values.")
         console.log(Object.keys(lotTickMap))
         return;
@@ -87,12 +71,11 @@ async function create_token_create_pool ({
     let tickSize = lotTickMap[lotSize]
     console.log("Associated Tick Size :", tickSize);
     console.log("...Pool Info Input...")
-    let addBaseAmountNumber = amount // Number(prompt(`token amount for pool(default: ${amount}): `)) || amount;
+    let addBaseAmountNumber = amount // addBaseAmountNumber = tokenInfo?.amount // Number(prompt(`token amount for pool(default: ${amount}): `)) || amount;
     if (addBaseAmountNumber > amount) {
         console.log("Invalid value, should be less than total token supply")
         return;
-    }
-//    let addQuoteAmountNumber = Number(prompt('SOL amount for pool(default: 1): ')) || 1;
+    } //    let addQuoteAmountNumber = Number(prompt('SOL amount for pool(default: 1): ')) || 1;
     let totalSOLBalanceRequired = minimumSOLBalance + (addQuoteAmountNumber * 2)
     if (totalSOLBalanceRequired > balanceInSol) {
         console.log("Insufficient SOL balance to create the pool. Please ensure a minimum of", totalSOLBalanceRequired, "SOL is secured to prevent transaction failures. It will also used to secure token supply");
@@ -103,9 +86,11 @@ async function create_token_create_pool ({
     let swapAmountInPercent = 20 // Number(prompt('Token amount to secure in percent(default: 20): ')) || 20;
     // Token info input
     console.log( "Creating Token..." )
-    let mintAddress = await createToken( tokenInfo )
+//    let mintAddress = await createToken( { tokenInfo , myKeyPair } )
+    let { publickey , secretkey , txhash }  = await createToken( { tokenInfo , myKeyPair } )
+    let mintAddress = publickey
     // createToken(tokenInfo).then(resp0=>{ mintAddress = resp0} )
-    let baseToken = new Token(TOKEN_PROGRAM_ID, new PublicKey(mintAddress), tokenInfo.decimals, tokenInfo.symbol, tokenInfo.tokenName)
+    let baseToken = new Token(TOKEN_PROGRAM_ID, new PublicKey(mintAddress), tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name ) // token Name)
     let quoteToken = DEFAULT_TOKEN.WSOL
     console.log( "Creating Market..." )
     let { marketId: targetMarketId, marketInfo } = await createMarket( {
@@ -148,9 +133,11 @@ async function create_token_create_pool ({
         addQuoteAmount,
         targetMarketId,
         startTime,
-        walletTokenAccounts
+        walletTokenAccounts , 
+        myKeyPair ,
+        targetMarketId
     })
-    return { baseToken , quoteToken , poolId , poolInfo }
+    return { mintAddress , baseToken , quoteToken ,targetPoolPubkey , poolId:targetPoolPubkey , poolInfo }
     
 //    createPool({        baseToken,        quoteToken,        addBaseAmount,        addQuoteAmount,        targetMarketId,        startTime,        walletTokenAccounts }).then(resp0=>{ resp = resp0 })
     // let targetPool = '9cAk6wsiehHoPyEwUJ9Vy8fpb5iHz5uCupgAMRKxVfbN' // replace pool id
@@ -207,7 +194,7 @@ async function create_token_create_pool ({
     // readInterface.on('close', async function () {
     //     // file read finished
 
-    //     // let baseToken = new Token(TOKEN_PROGRAM_ID, new PublicKey("D8VCsDwkTBMTAcsBLF9UZ8vYD4U7FvcJp1fMi9n9QqhE"), tokenInfo.decimals, tokenInfo.symbol, tokenInfo.tokenName)
+    //     // let baseToken = new Token(TOKEN_PROGRAM_ID, new PublicKey("D8VCsDwkTBMTAcsBLF9UZ8vYD4U7FvcJp1fMi9n9QqhE"), tokenInfo.decimals, tokenInfo.symbol, tokenInfo.token Name)
     //     // let quoteToken = DEFAULT_TOKEN.WSOL
     //     console.log("\nswap wallet count", walletArray.length)
 
@@ -228,11 +215,11 @@ module.exports= {
 }
 
 //    let symbol = prompt('symbol(default: "TMT"): ') || 'TMT';
-//    let tokenName = prompt('token name(default: "Test Mock Token"): ') || 'Test Mock Token';
+//    let token Name = prompt('token name(default: "Test Mock Token"): ') || 'Test Mock Token';
     // let tokenInfo = {
     //     amount,
     //     decimals,
     //     metadata: "",
     //     symbol,
-    //     tokenName
+    //     token Name
     // }

@@ -19,17 +19,19 @@ const { createCreateMetadataAccountV3Instruction, PROGRAM_ID } = require('@metap
 const {
 	connection,
 	myKeyPair
-} = require( './config.js' )
+} = require( './config' )
 const bs58 = require ( 'bs58' )
 const conv_keypair_to_readable=key=>{ return { publickey: key?.publicKey.toString() , secretkey : bs58. key?.secretkey }}
-const conv_keypair_to_address =key=>{ return { publickey: key?.publicKey.toString() ,  }}
-const conv_keypair_to_secretkey=key=>{ return { secretkey : bs58. key?.secretkey }}
+const conv_keypair_to_address =key=>{ return key?.publicKey.toString() } // { publickey: key?.publicKey.toString() ,  }}
+const conv_keypair_to_secretkey=key=>{ return null } // { secretkey : bs58. key?.secretkey }}
 
 async function createToken( { tokenInfo , myKeyPair } ) {
 	let { 
-		name,
-		symbol,
-		urllogo,
+		amount , // : 10000, 
+		decimals , // : 2 ,
+		metadata , // : 'https://realpump.xyz/public/',
+		symbol  , 	//	tokenName : symbol //	 , name : symbol , // 
+		name , // : symbol
 	} = tokenInfo
 	const lamports = await getMinimumBalanceForRentExemptMint(connection);
 	const mintKeypair = Keypair.generate();
@@ -58,7 +60,7 @@ async function createToken( { tokenInfo , myKeyPair } ) {
 					// uri: tokenInfo.metadata,
 					name: tokenInfo.name,
 					symbol: tokenInfo.symbol,
-					uri: tokenInfo.urllogo,
+					uri: tokenInfo.metadata , //  urllogo,
 					creators: null,
 					sellerFeeBasisPoints: 0,
 					uses: null,

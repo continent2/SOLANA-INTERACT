@@ -30,8 +30,8 @@ const generaterandomtxhash = ()=>{ //	let txhashhex=  generaterandomhex ( 64)
 	return  bs58.default.encode(new Buffer.from( txhashhex , 'hex'))
 }
 const conv_keypair_to_readable=key=>{ return { publickey: key?.publicKey.toString() , secretkey : bs58. key?.secretkey }}
-const conv_keypair_to_address =key=>{ return { publickey: key?.publicKey.toString() ,  }}
-const conv_keypair_to_secretkey=key=>{ return { secretkey : bs58. key?.secretkey }}
+const conv_keypair_to_address =key=>{ return key?.publicKey.toString() } // { publickey: key?.publicKey.toString() ,  }}
+const conv_keypair_to_secretkey=key=>{ return bs58.key?.secretkey } // { secretkey : bs58. key?.secretkey }}
 
 module.exports = {
 	tokenexists ,
