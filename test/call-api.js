@@ -13,17 +13,21 @@ tokenInfo = {
 	amount : 10000, 
 	decimals : 2 ,
 	metadata : 'https://realpump.xyz/public/',
+	name ,
 	symbol  ,
-//	tokenName : symbol //	 , name : symbol , // 
-	name : symbol
 }
 addQuoteAmountNumber ='0.1' // myKeyPair
 calleraddress = conv_keypair_to_address( myKeyPair )
 create_token_create_pool ({
-	calleraddress : conv_keypair_to_address( myKeyPair ),
-	tokenInfo ,
-	addQuoteAmountNumber : '0.1',
-	myKeyPair
+	amount : 10000, 
+	decimals : 2 ,
+	metadata : 'https://realpump.xyz/public/',
+	name ,
+	symbol  ,
+	// calleraddress : conv_keypair_to_address( myKeyPair ),
+	// tokenInfo ,
+	// addQuoteAmountNumber : '0.1',
+	// myKeyPair
 } ).then( resp =>{ resp0 = resp } )
 
 const db=require( '../models' )

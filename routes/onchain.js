@@ -19,25 +19,29 @@ const db = require ( '../models' )
 const { create_token_create_pool } = require ( '../chainutil/raydiumpre/create_token_create_pool' )
 const { generateSlug } = require('random-word-slugs')
 const MAP_BUYSELL_TYPES = { buy : 1 , sell : 1 }
-const {getrandomint } =require('../util/common' )
-router.get ( '/' , async(req,res)=>{
-  console.log (`hello world`)
-  respok ( res )
-})
-let tokenInfo = {
-	amount : 10000, 
-	decimals : 2 ,
-	metadata : 'https://realpump.xyz/public/',
-	symbol  ,
-	tokenName : symbol
-}
+const { getrandomint } =require('../util/common' )
+const { wrapper_create_token_create_pool } = require( '../chainutil/raydiumpre/wrapper-ctcp' )
+const { wrapper_execswap } = require ( '../chainutil/raydiumpre/exec_swap_fixedin' )
+// const { myKeyPair} = require ( '../chainutil/raydiumpre/config')
+// router.get ( '/' , async(req,res)=>{
+//   console.log (`hello world`)
+//   respok ( res )
+// })
+// let tokenInfo = {
+// 	amount : 10000, 
+// 	decimals : 2 ,
+// 	metadata : 'https://realpump.xyz/public/',
+// 	symbol  ,
+// 	name : symbol
+// }
 router.post ( '/poolandtoken' , async (req,res)=>{
   let { 
     amount, // < 18446744073709551615n
     decimals, // 1<= decimals<= 9
     metadata ,
+    name ,
     symbol,
-    tokenName ,
+    addQuoteAmountNumber
   } = req?.body
   // if ( amount ){}
   // else {amount = 10000}
@@ -47,22 +51,30 @@ router.post ( '/poolandtoken' , async (req,res)=>{
   // else {metadata = 'https://realpump.xyz/public/'}  
   // if( symbol){}
   // else { symbol = generateSlug(2,{format:'camel'}) + getrandomint({min:0,max:9999,format:'string',digits:4}) }
-  // if ( tokenName ){}
-  // else { tokenName = symbol }
-  if ( amount && decimals && metadata && symbol && tokenName ) {}
-  else { resperr ( res , message?.MSG_ARGINVALID) ; return }
-  let { baseToken , quoteToken , poolId , poolInfo } = await create_token_create_pool ( {
-    calleraddress : conv_keypair_to_address ( myKeyPair ),
-    tokenInfo : req?.body ,
-    addQuoteAmountNumber : '0.1' ,
-    myKeyPair , // : '',
+  // if ( name ){}
+  // else { name = symbol }
+  if ( amount && decimals && metadata && name && symbol ) {}
+  else { resperr ( res , message?.MSG_ARGINVALID) ; return } //  let { baseToken , quoteToken , poolId , poolInfo } 
+//  let resp = await create_token_create_pool ( {
+  let resp = await wrapper_create_token_create_pool ( {
+    amount, // < 18446744073709551615n
+    decimals, // 1<= decimals<= 9
+    metadata ,
+    name ,
+    symbol,
+    addQuoteAmountNumber //    calleraddress : conv_keypair_to_address ( myKeyPair ),//    tokenInfo : req?.body ,  //  addQuoteAmountNumber : '0.1' ,    // myKeyPair , // : '',
   } )
-
+  respok( res, message?.MSG_CREATED , null , { ... resp } ) 
 })
 router.post ( '/buysell/:type/:tokenaddress/:pooladdress/:amountin' , async (req,res)=>{
   let { type,  tokenaddress ,pooladdress , amountin } = req?.params
   if ( MAP_BUYSELL_TYPES[ type ]){}
   else { resperr( res , message?.MSG_ARGINVALID ) ; return }  
+  let txids = await wrapper_execswap ( {
+    baseToken : tokenaddress ,
+    amountIn   : amountin
+  } )
+  respok ( res, null,null ,{ txids }) 
 } )
 router.post ( '/pool/:tokenaddress', async ( req,res)=>{
   let { tokenaddress } =req?.params
