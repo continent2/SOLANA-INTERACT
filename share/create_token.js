@@ -22,14 +22,12 @@ const {
 } = require( './config' )
 const bs58 = require ( 'bs58' )
 const conv_keypair_to_readable=key=>{ return { publickey: key?.publicKey.toString() , secretkey : bs58. key?.secretkey }}
-const conv_keypair_to_address =key=>{ return key?.publicKey.toString() } // { publickey: key?.publicKey.toString() ,  }}
-const conv_keypair_to_secretkey=key=>{ return null } // { secretkey : bs58. key?.secretkey }}
 
 async function createToken( { tokenInfo , myKeyPair } ) {
 	let { 
 //		amount , // : 10000, 
 		decimals , // : 2 ,
-		metadata , // : 'https://realpump.xyz/public/',
+		metadata , // : 'https://realpump.xyz/public/abc.png',
 		symbol  , 	//	tokenName : symbol //	 , name : symbol , // 
 		name , // : symbol
 	} = tokenInfo
@@ -55,9 +53,6 @@ async function createToken( { tokenInfo , myKeyPair } ) {
 		{
 			createMetadataAccountArgsV3: {
 				data: {
-					// name: tokenInfo.tokenName,
-					// symbol: tokenInfo.symbol,
-					// uri: tokenInfo.metadata,
 					name: tokenInfo.name,
 					symbol: tokenInfo.symbol,
 					uri: tokenInfo.metadata , //  urllogo,

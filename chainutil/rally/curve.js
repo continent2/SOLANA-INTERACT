@@ -6,6 +6,8 @@ const { AccountLayout, MintLayout, Token, TOKEN_PROGRAM_ID } =require('@solana/s
 const TOKEN_PROGRAM_PUBKEY = new anchor.web3.PublicKey(TOKEN_PROGRAM_ID)
 const SWAP_ACCOUNT_SPACE = 324
 const { generateTestLinearSwapAccounts , generateTokenAccount , generateNewSignerAccount , generateTokenMint , generateNewGenericAccount } = require ( './util' )
+/* RTOKEN : RALLY TOKEN 
+*/
 const main = async ({
 	feeAuthority , 					// <= generateNewSignerAccount(provider);
 	destinationAuthority , 	// <= generateNewSignerAccount(provider);
