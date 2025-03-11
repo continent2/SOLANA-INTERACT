@@ -43,12 +43,12 @@ router.get ( '/address/pda/:mintaddress/:programid' , async (req,res)=>{
   else {}
   const mintpubkey = new PublicKey( mintaddress )
   const RP_PROGRAM_ID_PUB = new PublicKey( programid ); // RP_PROGRAM_ID
-  const [ tokenMintPDA ] = await PublicKey.findProgramAddress(
+  const [ tokenmintpda ] = await PublicKey.findProgramAddress(
     [Buffer.from('token_mint'), mintpubkey.toBuffer()], // mintPubkey.toBuffer()],
     RP_PROGRAM_ID_PUB,
   );
-  console.log('Derived tokenMintPDA:', tokenMintPDA.toBase58());
-  const [ metadataPDA ] = anchor.web3.PublicKey.findProgramAddressSync(
+  console.log('Derived tokenmintpda:', tokenmintpda.toBase58());
+  const [ metadatapda ] = anchor.web3.PublicKey.findProgramAddressSync(
     [ Buffer.from("metadata"),
       new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s").toBuffer(),
 //      mint.publicKey.toBuffer(),
@@ -56,7 +56,7 @@ router.get ( '/address/pda/:mintaddress/:programid' , async (req,res)=>{
     ],
     new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s")
   );
-  respok ( res, null , null  , { tokenMintPDA , metadataPDA } )
+  respok ( res, null , null  , { tokenmintpda , metadatapda } )
 } )
 router.post ( '/poolandtoken' , async (req,res)=>{
   let { 
