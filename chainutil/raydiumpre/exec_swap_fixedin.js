@@ -22,7 +22,7 @@ const {
 	sleepTime
 } = require('./util' )
 const { conv_keypair_to_secretkey } = require('../../util/solana' )
-const bs58 = require ( 'bs58' )
+// const bs58 = require ( 'bs58' )
 
 async function execSwap ( input ) {
 	let { // poolInfo		, 

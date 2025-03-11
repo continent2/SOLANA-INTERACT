@@ -1,7 +1,7 @@
 
 const axios=require ('axios')
 const { generateSlug } = require('random-word-slugs') // const { getrandomint } = require ( './util/common' )
-const { getrandomint } = require ( '../util/common' )
+const { getrandomint } = require ( '../../util/common' )
 const { create_token_create_pool } = require ( './create_token_create_pool') // ./chainutil/raydiumpre/create_token_create_pool' )
  symbol = generateSlug(2,{format:'camel'}) + getrandomint({min:0,max:9999,format:'string',digits:4})
 let { conv_keypair_to_address } = require ('../../util/solana' ) // const { myKeyPair } = require ( '../config/solana' )

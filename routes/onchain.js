@@ -19,7 +19,7 @@ const db = require ( '../models' )
 const { create_token_create_pool } = require ( '../chainutil/raydiumpre/create_token_create_pool' )
 const { generateSlug } = require('random-word-slugs')
 const MAP_BUYSELL_TYPES = { buy : 1 , sell : 1 }
-const { getrandomint } =require('../util/common' )
+// const { getrandomint } =require('../util/common' )
 const { wrapper_create_token_create_pool } = require( '../chainutil/raydiumpre/wrapper-ctcp' )
 const { wrapper_execswap } = require ( '../chainutil/raydiumpre/exec_swap_fixedin' )
 // const { myKeyPair} = require ( '../chainutil/raydiumpre/config')
@@ -34,6 +34,30 @@ const { wrapper_execswap } = require ( '../chainutil/raydiumpre/exec_swap_fixedi
 // 	symbol  ,
 // 	name : symbol
 // }
+// import { RP_PROGRAM_ID } from 'utils/constants';
+// export const RP_PROGRAM_ID = '55CoHrcKfaQAti2McBt37iuuErrv5oqs54trMnCJeFGu';
+const anchor = require("@coral-xyz/anchor")
+router.get ( '/address/pda/:mintaddress/:programid' , async (req,res)=>{
+  let { mintaddress , programid } = req?.params
+  if ( programid == '_'){ programid = '55CoHrcKfaQAti2McBt37iuuErrv5oqs54trMnCJeFGu' }
+  else {}
+  const mintpubkey = new PublicKey( mintaddress )
+  const RP_PROGRAM_ID_PUB = new PublicKey( programid ); // RP_PROGRAM_ID
+  const [ tokenMintPDA ] = await PublicKey.findProgramAddress(
+    [Buffer.from('token_mint'), mintpubkey.toBuffer()], // mintPubkey.toBuffer()],
+    RP_PROGRAM_ID_PUB,
+  );
+  console.log('Derived tokenMintPDA:', tokenMintPDA.toBase58());
+  const [ metadataPDA ] = anchor.web3.PublicKey.findProgramAddressSync(
+    [ Buffer.from("metadata"),
+      new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s").toBuffer(),
+//      mint.publicKey.toBuffer(),
+      mintpubkey.toBuffer()
+    ],
+    new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s")
+  );
+  respok ( res, null , null  , { tokenMintPDA , metadataPDA } )
+} )
 router.post ( '/poolandtoken' , async (req,res)=>{
   let { 
     amount, // < 18446744073709551615n
