@@ -37,6 +37,22 @@ const { wrapper_execswap } = require ( '../chainutil/raydiumpre/exec_swap_fixedi
 // import { RP_PROGRAM_ID } from 'utils/constants';
 // export const RP_PROGRAM_ID = '55CoHrcKfaQAti2McBt37iuuErrv5oqs54trMnCJeFGu';
 const anchor = require("@coral-xyz/anchor")
+
+router.get ( '/tradeinfo/:txhash/:nettype' , async (req,res)=>{
+  let { txhash , nettype } = req?.params
+  switch ( nettype ){
+    case 'devnet' : 
+    case 'mainnet' :
+    break
+    default : resperr ( res, `INVALID-NETTPE`, null , {reason : `nettype must be either devnet or mainnet`})
+    break
+  }
+  let amount 
+  let amountinbasecurrency 
+  let amountinquotecurrency 
+  let price
+  respok ( res , null , null , { amount , price } )
+})
 router.get ( '/address/pda/:mintaddress/:programid' , async (req,res)=>{
   let { mintaddress , programid } = req?.params
   if ( programid == '_'){ programid = '55CoHrcKfaQAti2McBt37iuuErrv5oqs54trMnCJeFGu' }
