@@ -38,8 +38,8 @@ const { wrapper_execswap } = require ( '../chainutil/raydiumpre/exec_swap_fixedi
 // export const RP_PROGRAM_ID = '55CoHrcKfaQAti2McBt37iuuErrv5oqs54trMnCJeFGu';
 const anchor = require("@coral-xyz/anchor")
 const { parse_tx } = require ( '../test/parse_tx' )
-router.get ( '/tradeinfo/:txhash/:nettype' , async (req,res)=>{
-  let { txhash , nettype } = req?.params
+router.get ( '/tradeinfo/:txhash/:nettype/:tokenid' , async (req,res)=>{
+  let { txhash , nettype , tokenid } = req?.params
   switch ( nettype ){
     case 'devnet' : 
     case 'mainnet' :
@@ -51,7 +51,7 @@ router.get ( '/tradeinfo/:txhash/:nettype' , async (req,res)=>{
   let amountinbasecurrency 
   let amountinquotecurrency 
   let price
-  let parseddata = await parse_tx ( { txhash , nettype})
+  let parseddata = await parse_tx ( { txhash , nettype , tokenid })
   respok ( res , null , null , { ... parseddata } ) // amount , price
 })
 router.get ( '/address/pda/:mintaddress/:programid' , async (req,res)=>{

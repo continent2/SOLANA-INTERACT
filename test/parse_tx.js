@@ -1,8 +1,11 @@
 
 // 52wg4GtrRZUoH6LhvfNHWovhkuZHcKmsKWEfHZ8dUhcnoBsBv2Wzi8Vgb69TaUnRrJQnVuEJfLb32Dnin2tHv4HT
+// 5cmCuunUH6vvsBMnMq8e7DJLi4LXYoWvkn9VNS9w6jJz9Q8nj5MK6t3mnWE9Ecen9auQaDMNfno2DcZxWJpMPkmu
+
 const axios = require ( 'axios')
 const txhash='5hWZgGsT599z6fofPssvKEK2YyPueHzpu9dsg1ZrpFK7L3y3Vd8eMhLx16tE7AGyWgSRSh4SExoCUhXPW5CWhB1u'
 const nettype='devnet'
+const db = require ( '../models' )
 const getamount = str =>{ //	let iCalContent = "DATE:20091201T220000\r\nSUMMARY:Dad's birthday";
 	let result = /\d+$/gm.exec( str )
 	console.log(result && result[1]);
@@ -19,7 +22,7 @@ const getamount = str =>{ //	let iCalContent = "DATE:20091201T220000\r\nSUMMARY:
 //   primary key ( id )
 // );
 const db=require ( '../models')
-const parse_resp = resp=>{ console.log ( resp?.data ) 
+const parse_resp = async ( { resp , tokenid } ) =>{ console.log ( resp?.data ) 
 	let Nfield = resp?.data?.result?.meta?.logMessages?.length
 	let arr=	resp?.data?.result?.meta?.logMessages[ Nfield - 3].split( '\n'  ) 
 	let N = arr?.length
@@ -27,6 +30,7 @@ const parse_resp = resp=>{ console.log ( resp?.data )
 	let amounttoken
 	let amountsol
 	let price 
+	let resptoken =await  db[ 'tokenstatic'].findOne ( {raw:true ,  where : { id : tokenid } } )
 	for ( let idx = 0 ; idx < N ; idx ++ ){ let line = arr[ idx ]
 		switch ( idx ){
 			case 0 : 
@@ -47,9 +51,14 @@ const parse_resp = resp=>{ console.log ( resp?.data )
 		}
 	}
 	price = +amountsol / +amounttoken
-	return { type , amount : amounttoken  ,  price : ''+price } // , amountsol
+	let amountnormalized = +amounttoken / ( Number.isFinite( +resptoken?.decimal ) ? 10**( +resptoken?.decimal ) : 1 )
+	return { type , 
+		amount : amountnormalized  , 
+		amountnormalized , // : amounttoken ,  
+		amountunnormalized : amounttoken ,  
+		price : ''+price } // , amountsol
 }
-const parse_tx = async ( { txhash ,nettype  } ) =>{
+const parse_tx = async ( { txhash ,nettype , tokenid } ) =>{
 	let resp = await axios.post ( ( nettype == 'devnet' ? `https://api.devnet.solana.com` : `https://api.solana.com` ) ,
 		{
 			"jsonrpc": "2.0",
@@ -67,7 +76,7 @@ const parse_tx = async ( { txhash ,nettype  } ) =>{
 //		timestamp : moment ,
 		nettype
 	 })
-	return parse_resp ( resp )
+	return ( await parse_resp ( { resp , tokenid } ) )
 //	console.log ( resp )
 //	return resp
 }
