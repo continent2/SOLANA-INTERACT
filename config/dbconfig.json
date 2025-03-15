@@ -2,7 +2,7 @@
   "development": {
     "host": "localhost",
     "username": "meme",
-    "port": "3306",
+    "port": "55681",
     "password": "5ZXUBRZ6BX2FHL5RE89X",
     "database": "solint",
     "dialect": "mysql" ,

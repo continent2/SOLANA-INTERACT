@@ -1,4 +1,5 @@
 
+// 52wg4GtrRZUoH6LhvfNHWovhkuZHcKmsKWEfHZ8dUhcnoBsBv2Wzi8Vgb69TaUnRrJQnVuEJfLb32Dnin2tHv4HT
 const axios = require ( 'axios')
 const txhash='5hWZgGsT599z6fofPssvKEK2YyPueHzpu9dsg1ZrpFK7L3y3Vd8eMhLx16tE7AGyWgSRSh4SExoCUhXPW5CWhB1u'
 const nettype='devnet'
@@ -7,9 +8,20 @@ const getamount = str =>{ //	let iCalContent = "DATE:20091201T220000\r\nSUMMARY:
 	console.log(result && result[1]);
 	return result [ 0 ] // 	return result [ 1 ]
 }
-const parse_resp = resp=>{
+
+// CREATE TABLE `txfetchresponsedata` (
+//   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+//   `createdat` datetime DEFAULT current_timestamp(),
+//   `updatedat` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+//   rawdata text , 
+//   txhash varchar(100) ,
+//   timestamp bigint ,
+//   primary key ( id )
+// );
+const db=require ( '../models')
+const parse_resp = resp=>{ console.log ( resp?.data ) 
 	let Nfield = resp?.data?.result?.meta?.logMessages?.length
-	let arr=	resp?.data.result.meta.logMessages[ Nfield - 3].split( '\n'  ) 
+	let arr=	resp?.data?.result?.meta?.logMessages[ Nfield - 3].split( '\n'  ) 
 	let N = arr?.length
 	let type 
 	let amounttoken
@@ -49,6 +61,12 @@ const parse_tx = async ( { txhash ,nettype  } ) =>{
 			]
 		}
 	)
+	await db[ 'txfetchresponsedata' ].create ( { 
+		rawdata : JSON.stringify ( resp?.data , null, 0 ) , 
+		txhash , // : '' ,
+//		timestamp : moment ,
+		nettype
+	 })
 	return parse_resp ( resp )
 //	console.log ( resp )
 //	return resp
